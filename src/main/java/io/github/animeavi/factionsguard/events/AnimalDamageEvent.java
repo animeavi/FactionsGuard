@@ -44,13 +44,15 @@ public class AnimalDamageEvent implements Listener {
 
     @EventHandler
     public void onEntityDamage(EntityDamageByEntityEvent event) {
-        if (!(fromPlayer && fromFireworks) || !FG.protectedWorlds.contains(event.getEntity().getWorld().getName())
-                || !protectAnimals || !(event.getEntity() instanceof Animals)) {
+        if (!(fromPlayer && fromFireworks) ||
+            !FG.protectedWorlds.contains(event.getEntity().getWorld().getName()) ||
+            !protectAnimals || !(event.getEntity() instanceof Animals)) {
             return;
         }
 
-        if ((event.getDamager() instanceof Player) || event.getCause() == EntityDamageEvent.DamageCause.PROJECTILE
-                || event.getCause() == EntityDamageEvent.DamageCause.ENTITY_EXPLOSION) {
+        if ((event.getDamager() instanceof Player) ||
+             event.getCause() == EntityDamageEvent.DamageCause.PROJECTILE ||
+             event.getCause() == EntityDamageEvent.DamageCause.ENTITY_EXPLOSION) {
 
             Entity damager = event.getDamager();
             Player player = null;
@@ -107,7 +109,7 @@ public class AnimalDamageEvent implements Listener {
 
                 if (faction.isWilderness() || faction.isSafeZone() || faction.isWarZone()) {
                     return;
-                } else if (!faction.getFPlayers().contains(fPlayer)) {
+                } else if ((entity instanceof Animals) && !faction.getFPlayers().contains(fPlayer)) {
                     if (showMessage)
                         player.sendMessage(message);
 
