@@ -65,7 +65,7 @@ public class AnimalDamageEvent implements Listener {
 
     @EventHandler
     public void onPotionSplash(PotionSplashEvent event) {
-        if (fromPotions && event.getEntity().getShooter() instanceof Player) {
+        if (protectAnimals && fromPotions && event.getEntity().getShooter() instanceof Player) {
             if (CommonEvent.shouldCancelSplashDamage(event, CommonEvent.MOB_TYPE.ANIMALS, showMessage, message)) {
                 event.setCancelled(true);
             } else if (protectFishe

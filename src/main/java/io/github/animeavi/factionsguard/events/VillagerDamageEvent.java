@@ -51,7 +51,7 @@ public class VillagerDamageEvent implements Listener {
 
     @EventHandler
     public void onPotionSplash(PotionSplashEvent event) {
-        if (fromPotions && event.getEntity().getShooter() instanceof Player) {
+        if (protectVillagers && fromPotions && event.getEntity().getShooter() instanceof Player) {
             if (CommonEvent.shouldCancelSplashDamage(event, CommonEvent.MOB_TYPE.VILLAGER, showMessage, message)) {
                 event.setCancelled(true);
             }
