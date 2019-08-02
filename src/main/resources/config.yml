@@ -1,3 +1,6 @@
+# Tracking changes in between versions to add new values (do not edit manually)
+config-version: 1
+
 # Nobody can use TNT explosions in any factions if this is enabled (protects against TNT cannons).
 disable-tnt-explosion-factions: true
 

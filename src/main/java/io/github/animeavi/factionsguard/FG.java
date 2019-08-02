@@ -30,6 +30,11 @@ public class FG extends JavaPlugin {
         if (resolvePlugin("Factions") != null) {
             plugin.createConfig();
             updateValues();
+
+            if (UpdateConfig.doUpdate(this, config.getInt("config-version", 0))) {
+                updateValues();
+            }
+
             server.getPluginManager().registerEvents(new ExplodeEvent(), this);
             server.getPluginManager().registerEvents(new TeleportEvent(), this);
             server.getPluginManager().registerEvents(new AnimalDamageEvent(), this);
