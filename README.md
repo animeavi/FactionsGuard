@@ -8,3 +8,7 @@ The protections include:
 
 * Preventing Chorus Fruit and Ender Pearl teleport inside of the land of any faction you don't belong to.
 * Prevents animals from being hurt by people outside of your faction.
+
+# Commands
+The only command right now is **/fgreload** to reload the configuration from disk.
+You need to have permissions to **fg.reload** to use it.
