@@ -1,0 +1,27 @@
+# Nobody can use TNT explosions in any factions if this is enabled (protects against TNT cannons).
+disable-tnt-explosion-factions: true
+
+# If this is enabled Chorus Fruit won't teleport you inside of a faction you're not part of.
+disallow-chorus-fruit-tp-other-factions: true
+
+# If this is enabled, Ender Pearl won't teleport you inside of a faction you're not part of.
+disallow-ender-pearl-tp-other-factions: true
+
+tp-other-factions-message: "&6I don't think so, Tim."
+
+# This will protect animals inside of your factions from normal attacks, potions and explosions
+animals-inside-of-factions:
+    protect: true
+    from-player: true
+    from-potions: true
+    from-fireworks: true
+    show-message: true
+    message: "&6Leave my animals alone!"
+
+# Specify the worlds you want the protections to apply to
+protected-worlds:
+ - world
+ - world_nether
+ - world_the_end
+
+config-reloaded-message: "&2FactionsGuard configuration reloaded!"

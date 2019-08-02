@@ -1,0 +1,17 @@
+name: FactionsGuard
+version: 1.0
+author: Zero
+main: io.github.animeavi.factionsguard.FG
+api-version: 1.14
+depend: [Factions]
+
+commands:
+  fgreload:
+    Description: Reloads the configuration file
+    usage: /fgreload
+    permission: fg.reload
+
+permissions:
+  fg.reload:
+    description: Allows player to reload the config file for FactionsGuard
+    default: op
