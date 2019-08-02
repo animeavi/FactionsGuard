@@ -10,7 +10,7 @@ The protections include:
 * Prevents animals from being hurt by people outside of your faction.
 * Prevents villagers from being hurt by people outside of your faction.
 
-Each protection can be disable individually.
+Each protection can be disabled individually.
 
 # Commands
 The only command right now is **/fgreload** to reload the configuration from disk.

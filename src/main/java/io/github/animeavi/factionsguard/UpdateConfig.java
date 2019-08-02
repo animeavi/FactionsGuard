@@ -18,6 +18,12 @@ public class UpdateConfig {
             config.set("villagers-inside-of-factions.message", "&6Leave my buddies alone!");
             saveConfig(plugin, config);
             return true;
+        } else if (version == 1) {
+            FileConfiguration config = plugin.getConfig();
+            config.set("config-version", 2);
+            config.set("animals-inside-of-factions.protect-water-animals", false);
+            saveConfig(plugin, config);
+            return true;
         }
 
         return false;

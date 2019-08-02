@@ -6,6 +6,7 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
+import org.bukkit.entity.WaterMob;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
@@ -18,7 +19,7 @@ import com.massivecraft.factions.Faction;
 
 public class CommonEvent {
     public static enum MOB_TYPE {
-        ANIMALS, VILLAGER
+        ANIMALS, VILLAGER, FISH
     };
 
     public static Faction getFaction(Entity entity) {
@@ -112,6 +113,8 @@ public class CommonEvent {
             if (type == MOB_TYPE.ANIMALS && (entity instanceof Animals)) {
                 validType = true;
             } else if (type == MOB_TYPE.VILLAGER && (entity instanceof Villager)) {
+                validType = true;
+            } else if (type == MOB_TYPE.FISH && (entity instanceof WaterMob)) {
                 validType = true;
             }
 
