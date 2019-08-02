@@ -1,5 +1,5 @@
 # Tracking changes in between versions to add new values (do not edit manually)
-config-version: 1
+config-version: 2
 
 # Nobody can use TNT explosions in any factions if this is enabled (protects against TNT cannons).
 disable-tnt-explosion-factions: true
@@ -15,6 +15,7 @@ tp-other-factions-message: "&6I don't think so, Tim."
 # This will protect animals inside of your factions from normal attacks, potions and explosions
 animals-inside-of-factions:
     protect: true
+    protect-water-animals: false
     from-player: true
     from-potions: true
     from-fireworks: true
