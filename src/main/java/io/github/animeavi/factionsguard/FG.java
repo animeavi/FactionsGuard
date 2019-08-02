@@ -12,6 +12,7 @@ import io.github.animeavi.factionsguard.commands.ReloadConfig;
 import io.github.animeavi.factionsguard.events.AnimalDamageEvent;
 import io.github.animeavi.factionsguard.events.ExplodeEvent;
 import io.github.animeavi.factionsguard.events.TeleportEvent;
+import io.github.animeavi.factionsguard.events.VillagerDamageEvent;
 
 public class FG extends JavaPlugin {
     public static FG plugin;
@@ -32,11 +33,13 @@ public class FG extends JavaPlugin {
             server.getPluginManager().registerEvents(new ExplodeEvent(), this);
             server.getPluginManager().registerEvents(new TeleportEvent(), this);
             server.getPluginManager().registerEvents(new AnimalDamageEvent(), this);
+            server.getPluginManager().registerEvents(new VillagerDamageEvent(), this);
             getCommand("fgreload").setExecutor(new ReloadConfig());
         }
     }
 
     public static void updateValues() {
+        plugin.reloadConfig();
         config = plugin.getConfig();
         protectedWorlds = getProtectedWorlds();
     }
@@ -61,7 +64,7 @@ public class FG extends JavaPlugin {
 
     private static List<String> getProtectedWorlds() {
         protectedWorlds = config.getStringList("protected-worlds");
-        
+
         if (protectedWorlds.isEmpty()) {
             protectedWorlds = new ArrayList<String>();
             protectedWorlds.add("world");

@@ -18,6 +18,15 @@ animals-inside-of-factions:
     show-message: true
     message: "&6Leave my animals alone!"
 
+# This will protect villagers inside of your factions from normal attacks, potions and explosions
+villagers-inside-of-factions:
+    protect: true
+    from-player: true
+    from-potions: true
+    from-fireworks: true
+    show-message: true
+    message: "&6Leave my buddies alone!"
+
 # Specify the worlds you want the protections to apply to
 protected-worlds:
  - world

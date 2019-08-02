@@ -8,16 +8,17 @@ import io.github.animeavi.factionsguard.FG;
 import io.github.animeavi.factionsguard.events.AnimalDamageEvent;
 import io.github.animeavi.factionsguard.events.ExplodeEvent;
 import io.github.animeavi.factionsguard.events.TeleportEvent;
+import io.github.animeavi.factionsguard.events.VillagerDamageEvent;
 import net.md_5.bungee.api.ChatColor;
 
 public class ReloadConfig implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] strings) {
-        FG.plugin.reloadConfig();
         FG.updateValues();
         TeleportEvent.updateValues();
         ExplodeEvent.updateValues();
         AnimalDamageEvent.updateValues();
+        VillagerDamageEvent.updateValues();
 
         String msg = ChatColor.translateAlternateColorCodes('&',
                 FG.plugin.getConfig().getString("config-reloaded-message", "&2FactionsGuard configuration reloaded!"));
