@@ -46,7 +46,9 @@ public class CommonEvent {
     public static boolean validDamageCause(EntityDamageByEntityEvent event) {
         return (event.getDamager() instanceof Player) ||
                 event.getCause() == EntityDamageEvent.DamageCause.PROJECTILE ||
-                event.getCause() == EntityDamageEvent.DamageCause.ENTITY_EXPLOSION;
+                event.getCause() == EntityDamageEvent.DamageCause.ENTITY_EXPLOSION ||
+                event.getCause() == EntityDamageEvent.DamageCause.POISON ||
+                event.getCause() == EntityDamageEvent.DamageCause.WITHER;
     }
 
     public static Player getPlayerCausingDamage(EntityDamageByEntityEvent event) {
