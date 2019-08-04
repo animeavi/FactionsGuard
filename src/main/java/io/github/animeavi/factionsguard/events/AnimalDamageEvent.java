@@ -98,6 +98,7 @@ public class AnimalDamageEvent implements Listener {
     @EventHandler
     public void onPlayerFeedParrots(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
+        if (CommonEvent.isAdminBypassing(player)) return;
 
         if (event.getRightClicked() instanceof Parrot &&
            (event.getHand().equals(EquipmentSlot.HAND) &&

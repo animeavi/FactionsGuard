@@ -13,6 +13,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
 
 import com.massivecraft.factions.Board;
+import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FLocation;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
@@ -84,6 +85,7 @@ public class CommonEvent {
         if (!insideOfPlayerFaction(faction)) return false;
 
         if (player != null) {
+            if (isAdminBypassing(player)) return false;
             if (!fromPlayer) return false;
 
             if (!isPlayerInFaction(player, faction)) {
@@ -115,6 +117,7 @@ public class CommonEvent {
                                                    String message) {
 
         Player player = (Player) event.getEntity().getShooter();
+        if (isAdminBypassing(player)) return false;
 
         for (Entity entity : event.getAffectedEntities()) {
             Faction faction = getFaction(entity.getLocation());
@@ -137,5 +140,10 @@ public class CommonEvent {
         }
 
         return false;
+    }
+
+    public static boolean isAdminBypassing(Player player) {
+        FPlayer fPlayer = FPlayers.getInstance().getByPlayer(player);
+        return Conf.playersWhoBypassAllProtection.contains(fPlayer.getName()) || fPlayer.isAdminBypassing();
     }
 }

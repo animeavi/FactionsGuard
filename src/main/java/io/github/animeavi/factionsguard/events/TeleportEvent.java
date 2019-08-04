@@ -36,6 +36,8 @@ public class TeleportEvent implements Listener {
     @EventHandler
     public void onTeleport(PlayerTeleportEvent event) {
         TeleportCause cause = event.getCause();
+        Player player = event.getPlayer();
+        if (CommonEvent.isAdminBypassing(player)) return;
 
         if (!FG.protectedWorlds.contains(event.getFrom().getWorld().getName())) {
             return;
@@ -47,9 +49,7 @@ public class TeleportEvent implements Listener {
 
         if (cause.equals(PlayerTeleportEvent.TeleportCause.CHORUS_FRUIT)
                 || cause.equals(PlayerTeleportEvent.TeleportCause.ENDER_PEARL)) {
-            Player player = event.getPlayer();
             Location tpLoc = event.getTo();
-
             Faction faction = CommonEvent.getFaction(tpLoc);
 
             if (!CommonEvent.insideOfPlayerFaction(faction)) {
