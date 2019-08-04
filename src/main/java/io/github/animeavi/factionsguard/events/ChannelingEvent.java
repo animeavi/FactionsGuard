@@ -9,10 +9,25 @@ import org.bukkit.event.weather.LightningStrikeEvent.Cause;
 
 import com.massivecraft.factions.Faction;
 
+import io.github.animeavi.factionsguard.FG;
+
 public class ChannelingEvent implements Listener {
+    private static boolean protectChanneling;
+
+    public ChannelingEvent() {
+        updateValues();
+    }
+
+    public static void updateValues() {
+        protectChanneling = FG.config.getBoolean("protect-factions-from-channeling", true);
+    }
+
     @EventHandler
     public void onChannelingStrike(LightningStrikeEvent event) {
-        if (event.getCause() == Cause.TRIDENT) {
+        if (!CommonEvent.enabledWorld(event.getWorld()))
+            return;
+
+        if (protectChanneling && event.getCause() == Cause.TRIDENT) {
             Faction faction = CommonEvent.getFaction(event.getLightning().getLocation());
 
             if (CommonEvent.insideOfPlayerFaction(faction)) {
@@ -24,7 +39,10 @@ public class ChannelingEvent implements Listener {
 
     @EventHandler
     public void onBlockIgnite(BlockIgniteEvent event) {
-        if (event.getCause() == IgniteCause.LIGHTNING) {
+        if (!CommonEvent.enabledWorld(event.getBlock().getWorld()))
+            return;
+
+        if (protectChanneling && event.getCause() == IgniteCause.LIGHTNING) {
             Faction faction = CommonEvent.getFaction(event.getBlock().getLocation());
 
             if (CommonEvent.insideOfPlayerFaction(faction)) {

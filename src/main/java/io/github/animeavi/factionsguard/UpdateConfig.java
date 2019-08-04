@@ -24,6 +24,13 @@ public class UpdateConfig {
             config.set("animals-inside-of-factions.protect-water-animals", false);
             saveConfig(plugin, config);
             return true;
+        } else if (version == 2) {
+            FileConfiguration config = plugin.getConfig();
+            config.set("config-version", 3);
+            config.set("protect-factions-from-channeling", true);
+            config.set("protect-factions-from-vehicles", true);
+            saveConfig(plugin, config);
+            return true;
         }
 
         return false;

@@ -12,6 +12,7 @@ import io.github.animeavi.factionsguard.commands.ReloadConfig;
 import io.github.animeavi.factionsguard.events.AnimalDamageEvent;
 import io.github.animeavi.factionsguard.events.ExplodeEvent;
 import io.github.animeavi.factionsguard.events.TeleportEvent;
+import io.github.animeavi.factionsguard.events.VehicleEvent;
 import io.github.animeavi.factionsguard.events.ChannelingEvent;
 import io.github.animeavi.factionsguard.events.VillagerDamageEvent;
 
@@ -41,6 +42,7 @@ public class FG extends JavaPlugin {
             server.getPluginManager().registerEvents(new AnimalDamageEvent(), this);
             server.getPluginManager().registerEvents(new VillagerDamageEvent(), this);
             server.getPluginManager().registerEvents(new ChannelingEvent(), this);
+            server.getPluginManager().registerEvents(new VehicleEvent(), this);
             getCommand("fgreload").setExecutor(new ReloadConfig());
         }
     }

@@ -37,9 +37,10 @@ public class TeleportEvent implements Listener {
     public void onTeleport(PlayerTeleportEvent event) {
         TeleportCause cause = event.getCause();
         Player player = event.getPlayer();
-        if (CommonEvent.isAdminBypassing(player)) return;
+        if (CommonEvent.isAdminBypassing(player))
+            return;
 
-        if (!FG.protectedWorlds.contains(event.getFrom().getWorld().getName())) {
+        if (!CommonEvent.enabledWorld(event.getFrom().getWorld())) {
             return;
         } else if (cause.equals(PlayerTeleportEvent.TeleportCause.CHORUS_FRUIT) && !protectChorus) {
             return;

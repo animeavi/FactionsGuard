@@ -44,7 +44,7 @@ public class AnimalDamageEvent implements Listener {
         if (protectAnimals) {
             if (!fromPlayer && !fromFireworks) {
                 return true;
-            } else if (!FG.protectedWorlds.contains(event.getEntity().getWorld().getName())) {
+            } else if (!CommonEvent.enabledWorld(event.getEntity().getWorld())) {
                 return true;
             } else if (event.getEntity() instanceof Animals) {
                 return false;
@@ -70,7 +70,12 @@ public class AnimalDamageEvent implements Listener {
 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
-        if (protectAnimals && CommonEvent.insideOfPlayerFaction(CommonEvent.getFaction(event.getEntity().getLocation()))) {
+        if (!CommonEvent.enabledWorld(event.getEntity().getWorld())) {
+            return;
+        }
+
+        if (protectAnimals
+                && CommonEvent.insideOfPlayerFaction(CommonEvent.getFaction(event.getEntity().getLocation()))) {
             boolean isAnimal = event.getEntity() instanceof Animals;
             boolean isFishe = protectFishe && event.getEntity() instanceof WaterMob;
 
@@ -85,6 +90,10 @@ public class AnimalDamageEvent implements Listener {
 
     @EventHandler
     public void onPotionSplash(PotionSplashEvent event) {
+        if (!CommonEvent.enabledWorld(event.getEntity().getWorld())) {
+            return;
+        }
+
         if (protectAnimals && fromPotions && event.getEntity().getShooter() instanceof Player) {
             if (CommonEvent.shouldCancelSplashDamage(event, CommonEvent.MOB_TYPE.ANIMALS, showMessage, message)) {
                 event.setCancelled(true);
@@ -94,21 +103,24 @@ public class AnimalDamageEvent implements Listener {
             }
         }
     }
-    
+
     @EventHandler
     public void onPlayerFeedParrots(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
-        if (CommonEvent.isAdminBypassing(player)) return;
+        if (!CommonEvent.enabledWorld(player.getWorld()) || CommonEvent.isAdminBypassing(player)) {
+            return;
+        }
 
-        if (event.getRightClicked() instanceof Parrot &&
-           (event.getHand().equals(EquipmentSlot.HAND) &&
-            player.getInventory().getItemInMainHand().getType().equals(Material.COOKIE)) ||
-           (event.getHand().equals(EquipmentSlot.OFF_HAND) &&
-            player.getInventory().getItemInOffHand().getType().equals(Material.COOKIE))) {
+        if (event.getRightClicked() instanceof Parrot
+                && (event.getHand().equals(EquipmentSlot.HAND)
+                        && player.getInventory().getItemInMainHand().getType().equals(Material.COOKIE))
+                || (event.getHand().equals(EquipmentSlot.OFF_HAND)
+                        && player.getInventory().getItemInOffHand().getType().equals(Material.COOKIE))) {
 
-            if (!CommonEvent.isPlayerInFaction(player, CommonEvent.getFaction(event.getRightClicked().getLocation())) ) {
+            if (!CommonEvent.isPlayerInFaction(player, CommonEvent.getFaction(event.getRightClicked().getLocation()))) {
                 event.setCancelled(true);
-                if (showMessage) player.sendMessage(message);
+                if (showMessage)
+                    player.sendMessage(message);
             }
         }
     }

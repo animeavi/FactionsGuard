@@ -26,7 +26,7 @@ public class ExplodeEvent implements Listener {
 
         // Check for primed TNT
         if (entity instanceof TNTPrimed) {
-            if (!FG.protectedWorlds.contains(event.getLocation().getWorld().getName()) || !protectTNT) {
+            if (!CommonEvent.enabledWorld(event.getLocation().getWorld()) || !protectTNT) {
                 return;
             }
 

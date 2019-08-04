@@ -34,14 +34,14 @@ public class VillagerDamageEvent implements Listener {
     }
 
     private boolean shouldStop(EntityDamageByEntityEvent event) {
-        return !(fromPlayer && fromFireworks) ||
-               !FG.protectedWorlds.contains(event.getEntity().getWorld().getName()) ||
-               !protectVillagers || !(event.getEntity() instanceof Villager);
+        return !(fromPlayer && fromFireworks) || !CommonEvent.enabledWorld(event.getEntity().getWorld())
+                || !protectVillagers || !(event.getEntity() instanceof Villager);
     }
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (shouldStop(event)) return;
+        if (shouldStop(event))
+            return;
 
         if (CommonEvent.validDamageCause(event)) {
             if (CommonEvent.shouldCancelDamage(event, fromPlayer, fromFireworks, showMessage, message)) {
@@ -52,7 +52,12 @@ public class VillagerDamageEvent implements Listener {
 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
-        if (protectVillagers && CommonEvent.insideOfPlayerFaction(CommonEvent.getFaction(event.getEntity().getLocation()))) {
+        if (!CommonEvent.enabledWorld(event.getEntity().getWorld())) {
+            return;
+        }
+
+        if (protectVillagers
+                && CommonEvent.insideOfPlayerFaction(CommonEvent.getFaction(event.getEntity().getLocation()))) {
             if (!(event.getEntity() instanceof Villager))
                 return;
 
@@ -64,6 +69,10 @@ public class VillagerDamageEvent implements Listener {
 
     @EventHandler
     public void onPotionSplash(PotionSplashEvent event) {
+        if (!CommonEvent.enabledWorld(event.getEntity().getWorld())) {
+            return;
+        }
+
         if (protectVillagers && fromPotions && event.getEntity().getShooter() instanceof Player) {
             if (CommonEvent.shouldCancelSplashDamage(event, CommonEvent.MOB_TYPE.VILLAGER, showMessage, message)) {
                 event.setCancelled(true);

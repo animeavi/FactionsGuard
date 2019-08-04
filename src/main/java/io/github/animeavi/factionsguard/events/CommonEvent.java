@@ -1,6 +1,7 @@
 package io.github.animeavi.factionsguard.events;
 
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -18,6 +19,8 @@ import com.massivecraft.factions.FLocation;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
+
+import io.github.animeavi.factionsguard.FG;
 
 public class CommonEvent {
     public static enum MOB_TYPE {
@@ -45,11 +48,10 @@ public class CommonEvent {
     }
 
     public static boolean validDamageCause(EntityDamageByEntityEvent event) {
-        return (event.getDamager() instanceof Player) ||
-                event.getCause() == EntityDamageEvent.DamageCause.PROJECTILE ||
-                event.getCause() == EntityDamageEvent.DamageCause.ENTITY_EXPLOSION ||
-                event.getCause() == EntityDamageEvent.DamageCause.POISON ||
-                event.getCause() == EntityDamageEvent.DamageCause.WITHER;
+        return (event.getDamager() instanceof Player) || event.getCause() == EntityDamageEvent.DamageCause.PROJECTILE
+                || event.getCause() == EntityDamageEvent.DamageCause.ENTITY_EXPLOSION
+                || event.getCause() == EntityDamageEvent.DamageCause.POISON
+                || event.getCause() == EntityDamageEvent.DamageCause.WITHER;
     }
 
     public static Player getPlayerCausingDamage(EntityDamageByEntityEvent event) {
@@ -73,20 +75,20 @@ public class CommonEvent {
         return player;
     }
 
-    public static boolean shouldCancelDamage(EntityDamageByEntityEvent event,
-                                             boolean fromPlayer,
-                                             boolean fromFireworks,
-                                             boolean showMessage,
-                                             String message) {
+    public static boolean shouldCancelDamage(EntityDamageByEntityEvent event, boolean fromPlayer, boolean fromFireworks,
+            boolean showMessage, String message) {
 
         Player player = getPlayerCausingDamage(event);
         Faction faction = getFaction(event.getEntity().getLocation());
 
-        if (!insideOfPlayerFaction(faction)) return false;
+        if (!insideOfPlayerFaction(faction))
+            return false;
 
         if (player != null) {
-            if (isAdminBypassing(player)) return false;
-            if (!fromPlayer) return false;
+            if (isAdminBypassing(player))
+                return false;
+            if (!fromPlayer)
+                return false;
 
             if (!isPlayerInFaction(player, faction)) {
                 if (event.getDamager() instanceof Arrow) {
@@ -94,12 +96,14 @@ public class CommonEvent {
                     arrow.remove();
                 }
 
-                if (showMessage) player.sendMessage(message);
+                if (showMessage)
+                    player.sendMessage(message);
                 return true;
             }
         } else {
             // Just cancel fireworks until I find a better way (if it even exists)
-            if (!fromFireworks) return false;
+            if (!fromFireworks)
+                return false;
             return true;
         }
 
@@ -107,23 +111,23 @@ public class CommonEvent {
     }
 
     public static boolean shouldCancelDamage(EntityDamageEvent event) {
-        return event.getCause() == EntityDamageEvent.DamageCause.POISON ||
-               event.getCause() == EntityDamageEvent.DamageCause.WITHER;
+        return event.getCause() == EntityDamageEvent.DamageCause.POISON
+                || event.getCause() == EntityDamageEvent.DamageCause.WITHER;
     }
 
-    public static boolean shouldCancelSplashDamage(PotionSplashEvent event,
-                                                   MOB_TYPE type,
-                                                   boolean showMessage,
-                                                   String message) {
+    public static boolean shouldCancelSplashDamage(PotionSplashEvent event, MOB_TYPE type, boolean showMessage,
+            String message) {
 
         Player player = (Player) event.getEntity().getShooter();
-        if (isAdminBypassing(player)) return false;
+        if (isAdminBypassing(player))
+            return false;
 
         for (Entity entity : event.getAffectedEntities()) {
             Faction faction = getFaction(entity.getLocation());
             boolean validType = false;
 
-            if (!insideOfPlayerFaction(faction)) continue;
+            if (!insideOfPlayerFaction(faction))
+                continue;
 
             if (type == MOB_TYPE.ANIMALS && (entity instanceof Animals)) {
                 validType = true;
@@ -134,7 +138,8 @@ public class CommonEvent {
             }
 
             if (validType && !isPlayerInFaction(player, faction)) {
-                if (showMessage) player.sendMessage(message);
+                if (showMessage)
+                    player.sendMessage(message);
                 return true;
             }
         }
@@ -145,5 +150,9 @@ public class CommonEvent {
     public static boolean isAdminBypassing(Player player) {
         FPlayer fPlayer = FPlayers.getInstance().getByPlayer(player);
         return Conf.playersWhoBypassAllProtection.contains(fPlayer.getName()) || fPlayer.isAdminBypassing();
+    }
+
+    public static boolean enabledWorld(World world) {
+        return FG.protectedWorlds.contains(world.getName());
     }
 }

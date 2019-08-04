@@ -31,6 +31,13 @@ villagers-inside-of-factions:
     show-message: true
     message: "&6Leave my buddies alone!"
 
+# Disable Channeling lightning and fire inside of Faction claims
+protect-factions-from-channeling: true
+
+# Don't let non-faction members or people without CONTAINER permissions
+# from putting down or destroying boats/minecarts in your faction
+protect-factions-from-vehicles: true
+
 # Specify the worlds you want the protections to apply to
 protected-worlds:
  - world
