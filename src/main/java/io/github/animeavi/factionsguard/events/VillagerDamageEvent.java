@@ -5,6 +5,7 @@ import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
 
 import io.github.animeavi.factionsguard.FG;
@@ -39,11 +40,23 @@ public class VillagerDamageEvent implements Listener {
     }
 
     @EventHandler
-    public void onEntityDamage(EntityDamageByEntityEvent event) {
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         if (shouldStop(event)) return;
 
         if (CommonEvent.validDamageCause(event)) {
             if (CommonEvent.shouldCancelDamage(event, fromPlayer, fromFireworks, showMessage, message)) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onEntityDamage(EntityDamageEvent event) {
+        if (protectVillagers && CommonEvent.insideOfPlayerFaction(CommonEvent.getFaction(event.getEntity().getLocation()))) {
+            if (!(event.getEntity() instanceof Villager))
+                return;
+
+            if (CommonEvent.shouldCancelDamage(event)) {
                 event.setCancelled(true);
             }
         }

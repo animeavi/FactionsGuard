@@ -11,8 +11,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.massivecraft.factions.Board;
 import com.massivecraft.factions.FLocation;
-import com.massivecraft.factions.FPlayer;
-import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.util.SpiralTask;
 
@@ -52,13 +50,11 @@ public class TeleportEvent implements Listener {
             Player player = event.getPlayer();
             Location tpLoc = event.getTo();
 
-            FLocation fLocation = new FLocation(tpLoc);
-            FPlayer fPlayer = FPlayers.getInstance().getByPlayer(player);
-            Faction faction = Board.getInstance().getFactionAt(fLocation);
+            Faction faction = CommonEvent.getFaction(tpLoc);
 
-            if (faction.isWilderness() || faction.isSafeZone() || faction.isWarZone()) {
+            if (!CommonEvent.insideOfPlayerFaction(faction)) {
                 return;
-            } else if (!faction.getFPlayers().contains(fPlayer)) {
+            } else if (!CommonEvent.isPlayerInFaction(player, faction)) {
                 player.sendMessage(tpMessage);
                 event.setCancelled(true);
                 factionTPWilderness(event);

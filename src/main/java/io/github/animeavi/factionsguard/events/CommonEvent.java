@@ -5,6 +5,7 @@ import org.bukkit.entity.Animals;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Trident;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.WaterMob;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -22,15 +23,14 @@ public class CommonEvent {
         ANIMALS, VILLAGER, FISH
     };
 
-    public static Faction getFaction(Entity entity) {
-        Location loc = entity.getLocation();
+    public static Faction getFaction(Location loc) {
         FLocation fLocation = new FLocation(loc);
         Faction faction = Board.getInstance().getFactionAt(fLocation);
 
         return faction;
     }
 
-    public static boolean mobInsidePlayerFaction(Faction faction) {
+    public static boolean insideOfPlayerFaction(Faction faction) {
         if (faction.isWilderness() || faction.isSafeZone() || faction.isWarZone()) {
             return false;
         } else {
@@ -62,6 +62,11 @@ public class CommonEvent {
             if (arrow.getShooter() instanceof Player) {
                 player = (Player) arrow.getShooter();
             }
+        } else if (damager instanceof Trident) {
+            Trident trident = (Trident) damager;
+            if (trident.getShooter() instanceof Player) {
+                player = (Player) trident.getShooter();
+            }
         }
 
         return player;
@@ -74,9 +79,9 @@ public class CommonEvent {
                                              String message) {
 
         Player player = getPlayerCausingDamage(event);
-        Faction faction = getFaction(event.getEntity());
+        Faction faction = getFaction(event.getEntity().getLocation());
 
-        if (!mobInsidePlayerFaction(faction)) return false;
+        if (!insideOfPlayerFaction(faction)) return false;
 
         if (player != null) {
             if (!fromPlayer) return false;
@@ -99,6 +104,11 @@ public class CommonEvent {
         return false;
     }
 
+    public static boolean shouldCancelDamage(EntityDamageEvent event) {
+        return event.getCause() == EntityDamageEvent.DamageCause.POISON ||
+               event.getCause() == EntityDamageEvent.DamageCause.WITHER;
+    }
+
     public static boolean shouldCancelSplashDamage(PotionSplashEvent event,
                                                    MOB_TYPE type,
                                                    boolean showMessage,
@@ -107,10 +117,10 @@ public class CommonEvent {
         Player player = (Player) event.getEntity().getShooter();
 
         for (Entity entity : event.getAffectedEntities()) {
-            Faction faction = getFaction(entity);
+            Faction faction = getFaction(entity.getLocation());
             boolean validType = false;
 
-            if (!mobInsidePlayerFaction(faction)) continue;
+            if (!insideOfPlayerFaction(faction)) continue;
 
             if (type == MOB_TYPE.ANIMALS && (entity instanceof Animals)) {
                 validType = true;

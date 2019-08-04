@@ -5,9 +5,7 @@ import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import com.massivecraft.factions.Board;
 import com.massivecraft.factions.Conf;
-import com.massivecraft.factions.FLocation;
 import com.massivecraft.factions.Faction;
 import io.github.animeavi.factionsguard.FG;
 
@@ -33,8 +31,7 @@ public class ExplodeEvent implements Listener {
             }
 
             boolean canBlowUp = false;
-            FLocation fLocation = new FLocation(event.getLocation());
-            Faction faction = Board.getInstance().getFactionAt(fLocation);
+            Faction faction = CommonEvent.getFaction(event.getLocation());
             boolean fWilderness = faction.isWilderness() && !Conf.wildernessDenyBuild;
             boolean fWarzone = faction.isWarZone() && !Conf.warZoneDenyBuild;
             boolean fSafezone = faction.isSafeZone() && !Conf.safeZoneDenyBuild;
