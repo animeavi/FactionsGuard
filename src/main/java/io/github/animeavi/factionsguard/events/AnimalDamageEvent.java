@@ -22,6 +22,7 @@ public class AnimalDamageEvent implements Listener {
     private static boolean showMessage;
     private static String message;
     private static boolean fromPlayer;
+    private static boolean fromAnimals;
     private static boolean fromPotions;
     private static boolean fromFireworks;
 
@@ -36,13 +37,14 @@ public class AnimalDamageEvent implements Listener {
         message = FG.config.getString("animals-inside-of-factions.message", "&6Leave my animals alone!");
         message = ChatColor.translateAlternateColorCodes('&', message);
         fromPlayer = FG.config.getBoolean("animals-inside-of-factions.from-player", true);
+        fromAnimals = FG.config.getBoolean("animals-inside-of-factions.from-animals", true);
         fromPotions = FG.config.getBoolean("animals-inside-of-factions.from-potions", true);
         fromFireworks = FG.config.getBoolean("animals-inside-of-factions.from-fireworks", true);
     }
 
     private boolean shouldStop(EntityDamageByEntityEvent event) {
         if (protectAnimals) {
-            if (!fromPlayer && !fromFireworks) {
+            if (!fromPlayer && !fromFireworks && !fromAnimals) {
                 return true;
             } else if (!CommonEvent.enabledWorld(event.getEntity().getWorld())) {
                 return true;
@@ -61,8 +63,8 @@ public class AnimalDamageEvent implements Listener {
         if (shouldStop(event))
             return;
 
-        if (CommonEvent.validDamageCause(event)) {
-            if (CommonEvent.shouldCancelDamage(event, fromPlayer, fromFireworks, showMessage, message)) {
+        if (CommonEvent.validDamageCause(event, fromAnimals)) {
+            if (CommonEvent.shouldCancelDamage(event, fromPlayer, fromAnimals, fromFireworks, showMessage, message)) {
                 event.setCancelled(true);
             }
         }

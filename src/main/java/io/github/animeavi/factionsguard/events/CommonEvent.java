@@ -47,11 +47,13 @@ public class CommonEvent {
         return faction.getFPlayers().contains(fPlayer);
     }
 
-    public static boolean validDamageCause(EntityDamageByEntityEvent event) {
-        return (event.getDamager() instanceof Player) || event.getCause() == EntityDamageEvent.DamageCause.PROJECTILE
-                || event.getCause() == EntityDamageEvent.DamageCause.ENTITY_EXPLOSION
-                || event.getCause() == EntityDamageEvent.DamageCause.POISON
-                || event.getCause() == EntityDamageEvent.DamageCause.WITHER;
+    public static boolean validDamageCause(EntityDamageByEntityEvent event, boolean fromAnimals) {
+        return event.getDamager() instanceof Player
+            || (event.getDamager() instanceof Animals && fromAnimals)
+            || event.getCause() == EntityDamageEvent.DamageCause.PROJECTILE
+            || event.getCause() == EntityDamageEvent.DamageCause.ENTITY_EXPLOSION
+            || event.getCause() == EntityDamageEvent.DamageCause.POISON
+            || event.getCause() == EntityDamageEvent.DamageCause.WITHER;
     }
 
     public static Player getPlayerCausingDamage(EntityDamageByEntityEvent event) {
@@ -75,16 +77,22 @@ public class CommonEvent {
         return player;
     }
 
-    public static boolean shouldCancelDamage(EntityDamageByEntityEvent event, boolean fromPlayer, boolean fromFireworks,
-            boolean showMessage, String message) {
+    public static boolean shouldCancelDamage(EntityDamageByEntityEvent event,
+            boolean fromPlayer,
+            boolean fromAnimals,
+            boolean fromFireworks,
+            boolean showMessage,
+            String message) {
 
-        Player player = getPlayerCausingDamage(event);
+        Entity entity = event.getDamager();
         Faction faction = getFaction(event.getEntity().getLocation());
 
         if (!insideOfPlayerFaction(faction))
             return false;
 
-        if (player != null) {
+        if (getPlayerCausingDamage(event) != null) {
+            Player player = getPlayerCausingDamage(event);
+
             if (isAdminBypassing(player))
                 return false;
             if (!fromPlayer)
@@ -100,6 +108,8 @@ public class CommonEvent {
                     player.sendMessage(message);
                 return true;
             }
+        } else if (fromAnimals && (entity instanceof Animals || entity instanceof WaterMob)) { 
+            return true;
         } else {
             // Just cancel fireworks until I find a better way (if it even exists)
             if (!fromFireworks)

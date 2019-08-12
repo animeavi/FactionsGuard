@@ -1,5 +1,5 @@
 # Tracking changes in between versions to add new values (do not edit manually)
-config-version: 2
+config-version: 4
 
 # Nobody can use TNT explosions in any factions if this is enabled (protects against TNT cannons).
 disable-tnt-explosion-factions: true
@@ -19,6 +19,7 @@ animals-inside-of-factions:
     from-player: true
     from-potions: true
     from-fireworks: true
+    from-animals: true
     show-message: true
     message: "&6Leave my animals alone!"
 
@@ -28,6 +29,7 @@ villagers-inside-of-factions:
     from-player: true
     from-potions: true
     from-fireworks: true
+    from-animals: true
     show-message: true
     message: "&6Leave my buddies alone!"
 
