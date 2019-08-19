@@ -14,11 +14,11 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
 
 import com.massivecraft.factions.Board;
-import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FLocation;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
+import com.massivecraft.factions.FactionsPlugin;
 
 import io.github.animeavi.factionsguard.FG;
 
@@ -159,7 +159,7 @@ public class CommonEvent {
 
     public static boolean isAdminBypassing(Player player) {
         FPlayer fPlayer = FPlayers.getInstance().getByPlayer(player);
-        return Conf.playersWhoBypassAllProtection.contains(fPlayer.getName()) || fPlayer.isAdminBypassing();
+        return FactionsPlugin.getInstance().conf().factions().protection().getPlayersWhoBypassAllProtection().contains(fPlayer.getName()) || fPlayer.isAdminBypassing();
     }
 
     public static boolean enabledWorld(World world) {

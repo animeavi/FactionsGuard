@@ -12,8 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
-import com.massivecraft.factions.zcore.fperms.Access;
-import com.massivecraft.factions.zcore.fperms.PermissableAction;
+import com.massivecraft.factions.perms.PermissibleAction;
 
 import io.github.animeavi.factionsguard.FG;
 
@@ -53,7 +52,7 @@ public class VehicleEvent implements Listener {
 
                 if (CommonEvent.insideOfPlayerFaction(faction)) {
                     if (!CommonEvent.isPlayerInFaction(player, faction)) {
-                        if (!(faction.getAccess(fPlayer, PermissableAction.CONTAINER) == Access.ALLOW)) {
+                        if (!faction.hasAccess(fPlayer, PermissibleAction.CONTAINER)) {
                             event.setCancelled(true);
                         }
                     }
@@ -77,7 +76,7 @@ public class VehicleEvent implements Listener {
 
             if (CommonEvent.insideOfPlayerFaction(faction)) {
                 if (!CommonEvent.isPlayerInFaction(player, faction)) {
-                    if (!(faction.getAccess(fPlayer, PermissableAction.CONTAINER) == Access.ALLOW)) {
+                    if (!faction.hasAccess(fPlayer, PermissibleAction.CONTAINER)) {
                         event.setCancelled(true);
                     }
                 }
