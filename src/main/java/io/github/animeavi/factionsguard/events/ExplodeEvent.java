@@ -31,14 +31,30 @@ public class ExplodeEvent implements Listener {
                 return;
             }
 
+            boolean wDenyBuild = false;
+            boolean wzDenyBuild = false;
+            boolean szDenyBuild = false;
+
+            if (!FG.legacy) {
+                wDenyBuild = FactionsPlugin.getInstance().conf().factions().protection().isWildernessDenyBuild();
+                wzDenyBuild = FactionsPlugin.getInstance().conf().factions().protection().isWarZoneDenyBuild();
+                szDenyBuild = FactionsPlugin.getInstance().conf().factions().protection().isSafeZoneDenyBuild();
+            } else {
+                try {
+                    Class<?> conf = Class.forName("com.massivecraft.factions.Conf");
+                    wDenyBuild = conf.getDeclaredField("wildernessDenyBuild").getBoolean(null);
+                    wzDenyBuild = conf.getDeclaredField("warZoneDenyBuild").getBoolean(null);
+                    szDenyBuild = conf.getDeclaredField("safeZoneDenyBuild").getBoolean(null);
+                } catch (ClassNotFoundException | IllegalArgumentException | IllegalAccessException
+                        | NoSuchFieldException | SecurityException e) {
+                }
+            }
+
             boolean canBlowUp = false;
             Faction faction = CommonEvent.getFaction(event.getLocation());
-            boolean fWilderness = faction.isWilderness()
-                    && !FactionsPlugin.getInstance().conf().factions().protection().isWildernessDenyBuild();
-            boolean fWarzone = faction.isWarZone()
-                    && !FactionsPlugin.getInstance().conf().factions().protection().isWarZoneDenyBuild();
-            boolean fSafezone = faction.isSafeZone()
-                    && !FactionsPlugin.getInstance().conf().factions().protection().isSafeZoneDenyBuild();
+            boolean fWilderness = faction.isWilderness() && !wDenyBuild;
+            boolean fWarzone = faction.isWarZone() && !wzDenyBuild;
+            boolean fSafezone = faction.isSafeZone() && !szDenyBuild;
 
             if (fWilderness || fWarzone || fSafezone) {
                 canBlowUp = true;

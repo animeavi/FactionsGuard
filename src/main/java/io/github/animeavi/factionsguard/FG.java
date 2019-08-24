@@ -21,6 +21,7 @@ public class FG extends JavaPlugin {
     protected static Server server;
     public static FileConfiguration config;
     public static List<String> protectedWorlds;
+    public static boolean legacy = false;
 
     public FG() {
         plugin = this;
@@ -35,6 +36,12 @@ public class FG extends JavaPlugin {
 
             if (UpdateConfig.doUpdate(this, config.getInt("config-version", 0))) {
                 updateValues();
+            }
+
+            Plugin factions = server.getPluginManager().getPlugin("Factions");
+            String version = factions.getDescription().getVersion().replaceAll("[^\\d]", "");
+            if (version.compareTo("1695049") < 0) {
+                legacy = true;
             }
 
             server.getPluginManager().registerEvents(new ExplodeEvent(), this);

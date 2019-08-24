@@ -52,7 +52,9 @@ public class VehicleEvent implements Listener {
 
                 if (CommonEvent.insideOfPlayerFaction(faction)) {
                     if (!CommonEvent.isPlayerInFaction(player, faction)) {
-                        if (!faction.hasAccess(fPlayer, PermissibleAction.CONTAINER)) {
+                        if (!FG.legacy && !faction.hasAccess(fPlayer, PermissibleAction.CONTAINER)) {
+                            event.setCancelled(true);
+                        } else if (FG.legacy && !CommonEvent.isPlayerInFaction(player, faction)) {
                             event.setCancelled(true);
                         }
                     }
@@ -76,7 +78,9 @@ public class VehicleEvent implements Listener {
 
             if (CommonEvent.insideOfPlayerFaction(faction)) {
                 if (!CommonEvent.isPlayerInFaction(player, faction)) {
-                    if (!faction.hasAccess(fPlayer, PermissibleAction.CONTAINER)) {
+                    if (!FG.legacy && !faction.hasAccess(fPlayer, PermissibleAction.CONTAINER)) {
+                        event.setCancelled(true);
+                    } else if (FG.legacy && !CommonEvent.isPlayerInFaction(player, faction)) {
                         event.setCancelled(true);
                     }
                 }

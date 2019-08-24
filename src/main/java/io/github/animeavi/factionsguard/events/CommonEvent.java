@@ -1,5 +1,7 @@
 package io.github.animeavi.factionsguard.events;
 
+import java.util.Set;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Animals;
@@ -157,9 +159,22 @@ public class CommonEvent {
         return false;
     }
 
+    @SuppressWarnings("unchecked")
     public static boolean isAdminBypassing(Player player) {
         FPlayer fPlayer = FPlayers.getInstance().getByPlayer(player);
-        return FactionsPlugin.getInstance().conf().factions().protection().getPlayersWhoBypassAllProtection().contains(fPlayer.getName()) || fPlayer.isAdminBypassing();
+        if (!FG.legacy) {
+            return FactionsPlugin.getInstance().conf().factions().protection().getPlayersWhoBypassAllProtection()
+                    .contains(fPlayer.getName()) || fPlayer.isAdminBypassing();
+        } else {
+            try {
+                Class<?> conf = Class.forName("com.massivecraft.factions.Conf");
+                Set<String> bypassPlayers = (Set<String>) conf.getDeclaredField("playersWhoBypassAllProtection").get(null);
+                return bypassPlayers.contains(fPlayer.getName()) || fPlayer.isAdminBypassing();
+            } catch (ClassNotFoundException | IllegalArgumentException | IllegalAccessException
+                   | NoSuchFieldException | SecurityException e) {
+                return false;
+            }
+        }
     }
 
     public static boolean enabledWorld(World world) {
