@@ -2,6 +2,8 @@ package io.github.animeavi.factionsguard.events;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Boat;
+import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,6 +22,7 @@ import net.md_5.bungee.api.ChatColor;
 public class TeleportEvent implements Listener {
     private static boolean protectChorus;
     private static boolean protectPearl;
+    private static boolean protectVehicles;
     private static String tpMessage;
 
     public TeleportEvent() {
@@ -29,6 +32,7 @@ public class TeleportEvent implements Listener {
     public static void updateValues() {
         protectChorus = FG.config.getBoolean("disallow-chorus-fruit-tp-other-factions", true);
         protectPearl = FG.config.getBoolean("disallow-ender-pearl-tp-other-factions", true);
+        protectVehicles = FG.config.getBoolean("protect-factions-from-vehicles", true);
         tpMessage = FG.config.getString("tp-other-factions-message", "&6I don't think so, Tim.");
         tpMessage = ChatColor.translateAlternateColorCodes('&', tpMessage);
     }
@@ -46,6 +50,8 @@ public class TeleportEvent implements Listener {
             return;
         } else if (cause.equals(PlayerTeleportEvent.TeleportCause.ENDER_PEARL) && !protectPearl) {
             return;
+        } else if (disallowedVehicle(player) && !protectVehicles) {
+            return;
         }
 
         if (cause.equals(PlayerTeleportEvent.TeleportCause.CHORUS_FRUIT)
@@ -60,6 +66,8 @@ public class TeleportEvent implements Listener {
                 event.setCancelled(true);
                 factionTPWilderness(event);
             }
+        } else if (disallowedVehicle(player)) {
+            player.getVehicle().remove();
         }
     }
 
@@ -96,5 +104,16 @@ public class TeleportEvent implements Listener {
                 };
             }
         }.runTask(FG.plugin);
+    }
+
+    private boolean disallowedVehicle(Player player) {
+        if (player.getVehicle() != null) {
+            if (player.getVehicle() instanceof Boat ||
+                player.getVehicle() instanceof Minecart) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
