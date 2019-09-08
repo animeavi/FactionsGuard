@@ -54,11 +54,11 @@ public class TeleportEvent implements Listener {
             return;
         }
 
+        Location tpLoc = event.getTo();
+        Faction faction = CommonEvent.getFaction(tpLoc);
+
         if (cause.equals(PlayerTeleportEvent.TeleportCause.CHORUS_FRUIT)
                 || cause.equals(PlayerTeleportEvent.TeleportCause.ENDER_PEARL)) {
-            Location tpLoc = event.getTo();
-            Faction faction = CommonEvent.getFaction(tpLoc);
-
             if (!CommonEvent.insideOfPlayerFaction(faction)) {
                 return;
             } else if (!CommonEvent.isPlayerInFaction(player, faction)) {
@@ -67,7 +67,11 @@ public class TeleportEvent implements Listener {
                 factionTPWilderness(event);
             }
         } else if (disallowedVehicle(player)) {
-            player.getVehicle().remove();
+            if (!CommonEvent.insideOfPlayerFaction(faction)) {
+                return;
+            } else if (!CommonEvent.isPlayerInFaction(player, faction)) {
+                player.getVehicle().remove();
+            }
         }
     }
 
